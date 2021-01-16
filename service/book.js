@@ -112,8 +112,42 @@ exports.book_list = function(req, res, next) {
 };
 
 // Display detail page for a specific book.
-exports.book_detail = function(req, res) {
-    res.send('NOT IMPLEMENTED: Book detail: ' + req.params.id);
+exports.book_detail = function(req, res, next) {
+    Book.findOne({
+        where: {
+            id : req.params.id
+        },
+        include : [
+            {
+                model : BookInstance,
+                as : 'book_instance_details'
+            },
+            {
+                model : Genre,
+                as : 'genre_details'
+            },
+            {
+                model : Author,
+                as : 'author_details'
+            }
+
+        ]
+    })
+    .then(function(book){
+
+        if(book == null){
+            var err = new Error('Book not found');
+            err.status = 404;
+            return next(err);
+        }
+
+        book = book.get({ plain : true });
+        res.render('book_detail', {title: 'Book Detail', book: book});
+    })
+    .catch(error => {
+        next(error);
+    });
+    
 };
 
 // Display book create form on GET.

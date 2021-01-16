@@ -33,12 +33,14 @@ module.exports = (sequelize, DataTypes) => {
         });
 
         Book.hasMany(models.BookInstance,{
-            foreignKey : 'book_id'
+            foreignKey : 'book_id',
+            as : 'book_instance_details'
         });
 
         Book.belongsToMany(models.Genre, {
             through: models.GenreAndBook,
-            foreignKey : 'book_id'
+            foreignKey : 'book_id',
+            as : 'genre_details'
         })
 
     }

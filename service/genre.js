@@ -50,7 +50,8 @@ exports.genre_detail = function(req, res, next) {
     })
     .catch(error => {
         next(error);
-    })
+    });
+    
 };
 
 // Display Genre create form on GET.
