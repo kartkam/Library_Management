@@ -10,7 +10,15 @@ module.exports = (sequelize, DataTypes) => {
         author_id : DataTypes.UUID,
         summary : DataTypes.STRING,
         isbn : DataTypes.STRING,
-        url : DataTypes.STRING
+        url : {
+            type : DataTypes.VIRTUAL,
+            get() {
+                return `/catalog/book/${this.id}`;
+            },
+            set(value) {
+                throw new Error('Do not try to set `url` value!');
+            }            
+        }
     },{
         tableName : 'Book',
         timestamps: false
@@ -20,7 +28,8 @@ module.exports = (sequelize, DataTypes) => {
         // associations can be defined here
 
         Book.belongsTo(models.Author,{
-            foreignKey : 'author_id'
+            foreignKey : 'author_id',
+            as: 'author_details'
         });
 
         Book.hasMany(models.BookInstance,{

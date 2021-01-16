@@ -5,6 +5,7 @@ var Author = require('../models').Author;
 var Genre = require('../models').Genre;
 var GenreAndBook = require('../models').GenreAndBook;
 
+//creating a new book
 module.exports.create = async (title, summary, isbn, author, genreList, cb) => {
     var bookdetail = { 
       title: title,
@@ -33,6 +34,7 @@ module.exports.create = async (title, summary, isbn, author, genreList, cb) => {
     
   }
 
+//home page data
 exports.index = function(req, res) {
 
     async.parallel({
@@ -79,8 +81,36 @@ exports.index = function(req, res) {
 };
 
 // Display list of all books.
-exports.book_list = function(req, res) {
-    res.send('NOT IMPLEMENTED: Book list');
+exports.book_list = function(req, res, next) {
+
+    Book.findAll({
+        attributes:[
+            'id',
+            'title',
+            'url'
+        ],
+        include: [
+            {
+                model: Author,
+                as: 'author_details',
+                attributes:[
+                    'first_name',
+                    'family_name',
+                    'name'
+                ]
+            }
+        ]
+    })
+    //.map(bookListData => bookListData.get({ plain: true }))
+    .then(function(bookList){
+        bookList = bookList.map(book => book.get({ plain: true }));
+        console.log(bookList);
+        res.render('book_list', {title: 'Book List', book_list: bookList});
+    })
+    .catch(error => {
+        next(error);
+    })
+    
 };
 
 // Display detail page for a specific book.

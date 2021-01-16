@@ -10,9 +10,25 @@ module.exports = (sequelize, DataTypes) => {
         family_name : DataTypes.STRING,
         date_of_birth : DataTypes.DATE,
         date_of_death : DataTypes.DATE,
-        name : DataTypes.STRING,
+        name : {
+            type: DataTypes.VIRTUAL,
+            get() {
+                return `${this.family_name}, ${this.first_name}`;
+            },
+            set(value) {
+                throw new Error('Do not try to set `fullName` value!');
+            }
+        },
         lifespan : DataTypes.STRING,
-        url : DataTypes.STRING
+        url : {
+            type : DataTypes.VIRTUAL,
+            get() {
+                return `/catalog/author/${this.id}`;
+            },
+            set(value) {
+                throw new Error('Do not try to set `url` value!');
+            }            
+        }
     },{
         tableName : 'Author',
         timestamps: false

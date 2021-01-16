@@ -7,7 +7,15 @@ module.exports = (sequelize, DataTypes) => {
             defaultValue: DataTypes.UUIDV4
         },
         name : DataTypes.STRING,
-        url : DataTypes.STRING
+        url : {
+            type : DataTypes.VIRTUAL,
+            get() {
+                return `/catalog/genre/${this.id}`;
+            },
+            set(value) {
+                throw new Error('Do not try to set `url` value!');
+            }            
+        }
     },{
         tableName : 'Genre',
         timestamps: false

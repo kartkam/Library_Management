@@ -17,7 +17,15 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.DATE,
             defaultValue: Sequelize.NOW
         },
-        url : DataTypes.STRING
+        url : {
+            type : DataTypes.VIRTUAL,
+            get() {
+                return `/catalog/bookInstance/${this.id}`;
+            },
+            set(value) {
+                throw new Error('Do not try to set `url` value!');
+            }            
+        }
     },{
         tableName : 'BookInstance',
         timestamps: false
