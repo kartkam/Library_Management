@@ -38,7 +38,8 @@ module.exports = (sequelize, DataTypes) => {
         // associations can be defined here
 
         Author.hasMany(models.Book, {
-            foreignKey : 'author_id'
+            foreignKey : 'author_id',
+            as : 'book_details'
         })
     }
 

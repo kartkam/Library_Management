@@ -1,4 +1,5 @@
 const Author = require('../models').Author;
+const Book = require('../models').Book;
 
 module.exports.create = async (first_name, family_name, date_of_birth, date_of_death, cb) => {
     authordetail = {first_name:first_name , family_name: family_name }
@@ -26,8 +27,35 @@ exports.author_list = function(req, res, next) {
 };
 
 // Display detail page for a specific Author.
-exports.author_detail = function(req, res) {
-    res.send('NOT IMPLEMENTED: Author detail: ' + req.params.id);
+exports.author_detail = function(req, res, next) {
+    
+    Author.findOne({
+        where: {
+            id : req.params.id
+        },
+        include : [
+            {
+                model : Book,
+                as : 'book_details'
+            }
+
+        ]
+    })
+    .then(function(author){
+
+        if(author == null){
+            var err = new Error('Author not found');
+            err.status = 404;
+            return next(err);
+        }
+
+        author = author.get({ plain : true });
+        res.render('author_detail', {title: 'Author Detail', author: author});
+    })
+    .catch(error => {
+        next(error);
+    });
+
 };
 
 // Display Author create form on GET.
