@@ -101,10 +101,8 @@ exports.book_list = function(req, res, next) {
             }
         ]
     })
-    //.map(bookListData => bookListData.get({ plain: true }))
     .then(function(bookList){
         bookList = bookList.map(book => book.get({ plain: true }));
-        console.log(bookList);
         res.render('book_list', {title: 'Book List', book_list: bookList});
     })
     .catch(error => {

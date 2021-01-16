@@ -12,8 +12,17 @@ module.exports.create = async (first_name, family_name, date_of_birth, date_of_d
 }
 
 // Display list of all Authors.
-exports.author_list = function(req, res) {
-    res.send('NOT IMPLEMENTED: Author list');
+exports.author_list = function(req, res, next) {
+    Author.findAll({
+        
+    })
+    .then(function(authorList){
+        authorList = authorList.map(author => author.get({ plain: true }));
+        res.render('author_list', {title: 'Author List', author_list: authorList});
+    })
+    .catch(error => {
+        next(error);
+    })
 };
 
 // Display detail page for a specific Author.

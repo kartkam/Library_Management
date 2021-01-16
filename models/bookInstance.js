@@ -35,7 +35,8 @@ module.exports = (sequelize, DataTypes) => {
         // associations can be defined here
 
         BookInstance.belongsTo(models.Book,{
-            foreignKey : 'book_id'
+            foreignKey : 'book_id',
+            as : 'book_details'
         });
 
     }

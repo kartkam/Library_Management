@@ -1,4 +1,5 @@
 var BookInstance = require('../models').BookInstance;
+var Book = require('../models').Book;
 
 module.exports.create = async (book, imprint, due_back, status, cb) => {
     bookinstancedetail = { 
@@ -17,8 +18,33 @@ module.exports.create = async (book, imprint, due_back, status, cb) => {
 
 
 // Display list of all BookInstances.
-exports.bookinstance_list = function(req, res) {
-  res.send('NOT IMPLEMENTED: BookInstance list');
+exports.bookinstance_list = function(req, res, next) {
+
+  BookInstance.findAll({
+      attributes:[
+        'id',
+        'url',
+        'imprint',
+        'status',
+        'due_back'
+      ],
+      include: [
+          {
+              model: Book,
+              as: 'book_details',
+              attributes:[
+                  'title'
+              ]
+          }
+      ]
+  })
+  .then(function(bookInstanceList){
+      bookInstanceList = bookInstanceList.map(bookInstance => bookInstance.get({ plain: true }));
+      res.render('bookinstance_list', {title: 'Book Instance List', bookinstance_list: bookInstanceList});
+  })
+  .catch(error => {
+      next(error);
+  })
 };
 
 // Display detail page for a specific BookInstance.

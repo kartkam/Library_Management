@@ -9,8 +9,17 @@ module.exports.create = async (name, cb) => {
 
 
 // Display list of all Genre.
-exports.genre_list = function(req, res) {
-    res.send('NOT IMPLEMENTED: Genre list');
+exports.genre_list = function(req, res, next) {
+    Genre.findAll({
+        
+    })
+    .then(function(genreList){
+        genreList = genreList.map(genre => genre.get({ plain: true }));
+        res.render('genre_list', {title: 'Genre List', genre_list: genreList});
+    })
+    .catch(error => {
+        next(error);
+    })
 };
 
 // Display detail page for a specific Genre.
