@@ -4,7 +4,7 @@ console.log('This script populates some test books, authors, genres and bookinst
 
 // Get arguments passed on command line
 var userArgs = process.argv.slice(2);
-var async = require('async')
+var async = require('async');
 
 var authorService = require('../service/author');
 var genreService = require('../service/genre');

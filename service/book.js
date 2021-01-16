@@ -1,4 +1,8 @@
+var async = require('async');
 var Book = require('../models').Book;
+var BookInstance = require('../models').BookInstance;
+var Author = require('../models').Author;
+var Genre = require('../models').Genre;
 var GenreAndBook = require('../models').GenreAndBook;
 
 module.exports.create = async (title, summary, isbn, author, genreList, cb) => {
@@ -29,9 +33,49 @@ module.exports.create = async (title, summary, isbn, author, genreList, cb) => {
     
   }
 
+exports.index = function(req, res) {
 
-  exports.index = function(req, res) {
-    res.send('NOT IMPLEMENTED: Site Home Page');
+    async.parallel({
+        book_count: function(callback){
+            Book.count()
+            .then(function(bookCount){
+                callback(null,bookCount);
+            });
+        },
+        book_instance_count: function(callback){
+            BookInstance.count()
+            .then(function(bookInstanceCount){
+                callback(null,bookInstanceCount);
+            });
+        },
+        book_instance_available_count: function(callback){
+            BookInstance.count({
+                where: {
+                    status: 'Available'
+                }
+            })
+            .then(function(bookInstanceCount){
+                callback(null,bookInstanceCount);
+            });
+        },
+        genre_count: function(callback){
+            Genre.count()
+            .then(function(genreCount){
+                callback(null,genreCount);
+            });
+        },
+        author_count: function(callback){
+            Author.count()
+            .then(function(authorCount){
+                callback(null,authorCount);
+            });
+        }
+    }, function(err,results){
+        res.render('index', {title: 'Local Library Home', error: err, data: results});
+
+    });
+
+
 };
 
 // Display list of all books.
