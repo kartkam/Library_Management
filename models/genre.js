@@ -26,7 +26,8 @@ module.exports = (sequelize, DataTypes) => {
 
         Genre.belongsToMany(models.Book, {
             through: models.GenreAndBook,
-            foreignKey: 'genre_id'
+            foreignKey: 'genre_id',
+            as : 'book_details'
         })
 
     }

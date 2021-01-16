@@ -1,4 +1,5 @@
 const Genre = require('../models').Genre;
+const Book = require('../models').Book;
 
 module.exports.create = async (name, cb) => {
    
@@ -23,8 +24,33 @@ exports.genre_list = function(req, res, next) {
 };
 
 // Display detail page for a specific Genre.
-exports.genre_detail = function(req, res) {
-    res.send('NOT IMPLEMENTED: Genre detail: ' + req.params.id);
+exports.genre_detail = function(req, res, next) {
+    Genre.findOne({
+        where: {
+            id : req.params.id
+        },
+        include : [
+            {
+                model : Book,
+                as : 'book_details'
+            }
+
+        ]
+    })
+    .then(function(genre){
+
+        if(genre == null){
+            var err = new Error('Genre not found');
+            err.status = 404;
+            return next(err);
+        }
+
+        genre = genre.get({ plain : true });
+        res.render('genre_detail', {title: 'Genre Detail', genre: genre});
+    })
+    .catch(error => {
+        next(error);
+    })
 };
 
 // Display Genre create form on GET.
