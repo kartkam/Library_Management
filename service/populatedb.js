@@ -40,7 +40,7 @@ module.exports.initData = (cb) => {
       ],
       // optional callback
       function(err,results) {
-          createBooks(null,results);
+          createBooks(cb,results);
       });
            
 }
@@ -79,7 +79,7 @@ function createBooks(cb,results) {
       // optional callback
       function(err,books) {
         console.log("Books created: ",books);
-        createBookInstances(null,books)
+        createBookInstances(cb,books)
       });
 }
 
@@ -124,7 +124,10 @@ function createBookInstances(cb,books) {
         function(err,bookInstances) {
           console.log("Book instances created: ",bookInstances);
           
-        });
+          //all inserts successful, so calling router callback
+          cb();
+        }
+    );
 }
 
 
