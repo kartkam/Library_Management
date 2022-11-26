@@ -1,10 +1,17 @@
 {
   "development": {
-    "username": "tp_dev",
-    "password": "kartik",
+    "username": "devUser",
+    "password": "devPwd",
     "database": "practiceDb",
     "host": "127.0.0.1",
-    "dialect": "postgres"
+    "dialect": "postgres",
+    "dialectOptions" : {
+      "ssl": {
+        "require": true,
+        "rejectUnauthorized": false
+      }
+    }
+    
   },
   "test": {
     "username": "root",
@@ -14,10 +21,10 @@
     "dialect": "mysql"
   },
   "production": {
-    "username": "root",
-    "password": null,
-    "database": "database_production",
+    "username": "prodUser",
+    "password": "prodPwd",
+    "database": "practiceDb",
     "host": "127.0.0.1",
-    "dialect": "mysql"
+    "dialect": "postgres"
   }
 }
